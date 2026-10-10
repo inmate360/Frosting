@@ -8,16 +8,20 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "start": "node .output/server/index.mjs",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "db:migrate": "node scripts/migrate.js"
   },
   "dependencies": {
     "nuxt": "^3.8.1",
-    "vue": "latest",
-    "@nuxt/ui": "latest",
-    "h3": "^1.0.0"
+    "vue": "^3.3.0",
+    "@nuxt/ui": "^2.13.0",
+    "h3": "^1.10.0",
+    "pg": "^8.11.3",
+    "jsonwebtoken": "^9.1.2",
+    "bcryptjs": "^2.4.3"
   },
   "devDependencies": {
-    "@nuxt/devtools": "latest",
-    "typescript": "latest"
+    "@nuxt/devtools": "^1.0.0",
+    "typescript": "^5.3.0"
   }
 }
