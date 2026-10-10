@@ -13,13 +13,13 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    // Find user
-    const result = await query('SELECT id, email, name, password FROM users WHERE email = $1', [email])
+    // Find user by email
+    const result = await query('SELECT id, email, name, password FROM users WHERE email = $1', [email.toLowerCase()])
     
     if (result.rows.length === 0) {
       throw createError({
         statusCode: 401,
-        statusMessage: 'Invalid credentials'
+        statusMessage: 'Invalid email or password'
       })
     }
 
@@ -29,12 +29,19 @@ export default defineEventHandler(async (event) => {
     if (!passwordMatch) {
       throw createError({
         statusCode: 401,
-        statusMessage: 'Invalid credentials'
+        statusMessage: 'Invalid email or password'
       })
     }
 
-    const token = generateToken(user.id, user.email)
-    setCookie(event, 'auth_token', token, { httpOnly: true, maxAge: 60 * 60 * 24 * 7 })
+    const token = generateToken(user.id.toString(), user.email)
+    
+    // Set auth cookie
+    setCookie(event, 'auth_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      sameSite: 'strict'
+    })
 
     return {
       success: true,
